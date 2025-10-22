@@ -1,41 +1,41 @@
 import os
-from Ftp import Ftp
-from json_handler import Handler
+from SftpWithParamiko import SftpWithParamiko
+from JsonToDict import JsonToDict
 
 
 class UpdateFolders:
-    __slashes={"Windows":"\\", "Linux":"/"}
-    localpath = None
-    targetpath = None
 
     def __init__(self, credentials):
-        self.sftp_connection = Ftp(credentials)
-        self.sftp = self.sftp_connection.connection_to_sftp_with_paramiko()
+        self.slashes = {"Windows": "\\", "Linux": "/"}
+        self.localpath = None
+        self.targetpath = None
+        self.path_dict = None
 
-        self.path_handler = None
-        self.local_slash,self.target_slash=self.sftp_connection.who_am_i()
+        self.sftp_connection = SftpWithParamiko(credentials)
+        self.sftp = self.sftp_connection.connection()
+        self.local_slash, self.target_slash = self.sftp_connection.identify_os()
 
     def update(self, localpath_to_targetpath_file):
-        self.path_handler=Handler(localpath_to_targetpath_file)
-        from_to_pathes=self.path_handler.data.items()
+        self.path_dict = JsonToDict(localpath_to_targetpath_file)
+        from_to_pathes = self.path_dict.data.items()
         for key, value in from_to_pathes:
             self.localpath = key
             self.targetpath = value
-            self._recursive_folder_update(self.localpath, self.targetpath)
+            self.recursive_folder_update(self.localpath, self.targetpath)
 
-    def _recursive_folder_update(self, localpath, targetpath):
+    def recursive_folder_update(self, localpath, targetpath):
         files = os.listdir(localpath)
         for file in files:
-            localpath_file = localpath + self.__slashes[self.local_slash] + file
-            targetpath_file = targetpath + self.__slashes[self.target_slash] + file
+            localpath_file = localpath + self.slashes[self.local_slash] + file
+            targetpath_file = targetpath + self.slashes[self.target_slash] + file
             if not os.path.isfile(localpath_file):
                 try:
                     self.sftp.chdir(targetpath_file)
-                    self._recursive_folder_update(localpath_file, targetpath_file)
+                    self.recursive_folder_update(localpath_file, targetpath_file)
                 except IOError:
                     self.sftp.mkdir(targetpath_file)
                     self.sftp.chdir(targetpath_file)
-                    self._recursive_folder_update(localpath_file, targetpath_file)
+                    self.recursive_folder_update(localpath_file, targetpath_file)
             else:
                 self.sftp.put(localpath_file, targetpath_file)
 
