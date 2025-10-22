@@ -1,5 +1,5 @@
 import os
-from ftp_connector import Ftp
+from Ftp import Ftp
 from json_handler import Handler
 
 
@@ -17,7 +17,7 @@ class UpdateFolders:
 
     def update(self, localpath_to_targetpath_file):
         self.path_handler=Handler(localpath_to_targetpath_file)
-        from_to_pathes=self.path_handler.get_data().items()
+        from_to_pathes=self.path_handler.data.items()
         for key, value in from_to_pathes:
             self.localpath = key
             self.targetpath = value
@@ -38,8 +38,6 @@ class UpdateFolders:
                     self._recursive_folder_update(localpath_file, targetpath_file)
             else:
                 self.sftp.put(localpath_file, targetpath_file)
-        print('Upload done.')
 
     def connection_close(self):
         self.sftp_connection.proper_connection_close()
-
