@@ -2,14 +2,18 @@ import json
 
 
 class Handler:
+    __slots__ = "_data"
+
     def __init__(self, filepath):
-        self.filepath = filepath
-        self.data = {}
-        self.load()
+        self._load(filepath)
 
-    def load(self):
-        with open(self.filepath, "r") as f:
-            self.data = json.load(f)
+    @property
+    def data(self):
+        return self._data
 
-    def get_data(self):
-        return self.data
+    def _load(self, value: str):
+        if not value:
+            raise AttributeError("Filepath can't be None")
+        else:
+            with open(value, "r") as f:
+                self._data = json.load(f)
