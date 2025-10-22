@@ -24,7 +24,7 @@ class User:
 
     @property
     def username(self):
-        return self._hostname
+        return self._username
 
     @username.setter
     def username(self, value: str):
