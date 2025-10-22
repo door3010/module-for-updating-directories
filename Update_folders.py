@@ -31,14 +31,15 @@ class UpdateFolders:
             if not os.path.isfile(localpath_file):
                 try:
                     self.sftp.chdir(targetpath_file)
-                    self.recursive_folder_update(localpath_file, targetpath_file)
+                    self._recursive_folder_update(localpath_file, targetpath_file)
                 except IOError:
                     self.sftp.mkdir(targetpath_file)
                     self.sftp.chdir(targetpath_file)
-                    self.recursive_folder_update(localpath_file, targetpath_file)
+                    self._recursive_folder_update(localpath_file, targetpath_file)
             else:
                 self.sftp.put(localpath_file, targetpath_file)
         print('Upload done.')
 
     def connection_close(self):
         self.sftp_connection.proper_connection_close()
+
