@@ -9,8 +9,10 @@ Class `UpdateFolders` gets path to json credentials file, `update()` method gets
 
 Usage example:
 ```
-  new_instance=UpdateFolders("credentials.json") # create an instance
-  new_instance.update("localpath_to_targetpath.json",) # call update method with path/to/file.json 
-  # Importantly recall close connection function
-  new_instance.connection_close() # close the connection
+from Update_folders import UpdateFolders
+
+example = UpdateFolders("credentials.json") # create an instance
+example.update("localpath_to_targetpath.json")  # call update method with path/to/file.json
+
+example.connection_close() # Importantly recall close connection function
 ```
