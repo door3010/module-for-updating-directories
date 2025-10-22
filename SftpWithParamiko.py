@@ -1,7 +1,7 @@
 import paramiko
 import platform
 
-from JsonToDict import Handler
+from JsonToDict import JsonToDict
 from user_model import User
 
 
@@ -25,3 +25,4 @@ class SftpWithParamiko:
     def proper_connection_close(self):
         self.sftp_connector.close()
         self.transport.close()
+
