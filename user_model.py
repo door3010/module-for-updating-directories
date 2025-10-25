@@ -7,3 +7,4 @@ class User:
     port: int
     username: str
     password: str
+    target_os: str
