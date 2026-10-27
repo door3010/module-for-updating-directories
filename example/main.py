@@ -1,5 +1,4 @@
-from Update_folders import UpdateFolders
+from UpdateFolders import UpdateFolders
 
-example = UpdateFolders("credentials.json")
-example.update("localpath_to_targetpath.json")
-example.connection_close()
+with UpdateFolders("credentials.json") as updater:
+    updater.update("localpath_to_targetpath.json")
